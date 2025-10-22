@@ -1,11 +1,10 @@
-"use client";
+'use client';
 
-import { Provider } from "react-redux";
-import { useRef } from "react";
-import { makeStore } from "@/store/makeStore";
+import { Provider } from 'react-redux';
+import { makeStore } from '@/store/makeStore';
+
+const store = makeStore();
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  // keep a single store instance on client
-  const storeRef = useRef(makeStore());
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return <Provider store={store}>{children}</Provider>;
 }
