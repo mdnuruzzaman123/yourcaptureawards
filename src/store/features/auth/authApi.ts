@@ -10,7 +10,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     signin: builder.mutation<{ token: string; user: IUser }, TSigninData>({
       query: (credentials) => ({
-        url: '/auth/signin',
+        url: 'api/v1/auth/signin',
         method: 'POST',
         body: credentials,
       }),
@@ -31,7 +31,7 @@ export const authApi = createApi({
 
     signup: builder.mutation<{ token: string; user: IUser }, TSignupData>({
       query: (userData) => ({
-        url: '/auth/register',
+        url: 'api/v1/auth/register',
         method: 'POST',
         body: userData,
       }),
@@ -51,7 +51,7 @@ export const authApi = createApi({
     }),
 
     getProfile: builder.query<any, void>({
-      query: () => '/auth/profile',
+      query: () => 'api/v1/auth/profile',
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

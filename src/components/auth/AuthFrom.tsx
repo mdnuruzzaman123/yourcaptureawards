@@ -5,9 +5,8 @@ import FormField from './FormField';
 import { FaGoogle, FaFacebookF } from 'react-icons/fa';
 import { IoCheckbox, IoCheckboxOutline } from 'react-icons/io5';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { authApi, useSigninMutation, useSignupMutation } from '@/store/features/auth/authApi';
+import { useSigninMutation, useSignupMutation } from '@/store/features/auth/authApi';
 import { toast } from 'sonner';
-import { useAppDispatch } from '@/store/hooks';
 import Link from 'next/link';
 import LogoName from '../LogoName';
 
@@ -16,9 +15,8 @@ const AuthForm = ({ type = 'signin' }: { type: 'signin' | 'signup' }) => {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const dispatch = useAppDispatch();
-  const [login, { isLoading: isLoginLoading }] = useSigninMutation();
-  const [register, { isLoading: isRegisterLoading }] = useSignupMutation();
+  const [signin, { isLoading: isLoginLoading }] = useSigninMutation();
+  const [signup, { isLoading: isRegisterLoading }] = useSignupMutation();
 
   // Manual Login/Register handler
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -26,29 +24,22 @@ const AuthForm = ({ type = 'signin' }: { type: 'signin' | 'signup' }) => {
     const form = e.currentTarget as HTMLFormElement;
     const email = (form.elements.namedItem('email') as HTMLInputElement).value;
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-    const confirmPassword = (form.elements.namedItem('confirmPassword') as HTMLInputElement).value;
-    const firstName = (form.elements.namedItem('firstName') as HTMLInputElement)?.value;
-    const lastName = (form.elements.namedItem('lastName') as HTMLInputElement)?.value;
-    const phone = (form.elements.namedItem('phone') as HTMLInputElement)?.value;
+    const confirmPassword = (form.elements?.namedItem('confirmPassword') as HTMLInputElement).value;
+    const firstName = (form.elements?.namedItem('firstName') as HTMLInputElement)?.value;
+    const lastName = (form.elements?.namedItem('lastName') as HTMLInputElement)?.value;
+    const phone = (form.elements?.namedItem('phone') as HTMLInputElement)?.value;
 
     try {
       if (type === 'signin') {
-        await login({ email, password }).unwrap();
-        await dispatch(
-          authApi.endpoints.getProfile.initiate(undefined, {
-            forceRefetch: true,
-            subscribe: false,
-          }),
-        ).unwrap();
+        await signin({ email, password }).unwrap();
 
         toast.success('Login Successful', {});
       } else {
-        await register({ email, firstName, lastName, phone, password, confirmPassword }).unwrap();
+        await signup({ email, firstName, lastName, phone, password, confirmPassword }).unwrap();
 
         toast.success('Account Created', {
           description: 'You can now log in with your new account.',
         });
-        form.reset();
       }
     } catch (err: any) {
       toast.error('Oops! Something went wrong', {
@@ -56,7 +47,7 @@ const AuthForm = ({ type = 'signin' }: { type: 'signin' | 'signup' }) => {
           err?.data?.message || err?.error || 'Please check your credentials and try again.',
       });
     } finally {
-      form.reset();
+      // form.reset();
     }
   };
 
@@ -167,7 +158,7 @@ const AuthForm = ({ type = 'signin' }: { type: 'signin' | 'signup' }) => {
       <FormField label="Email" id="email" type="email" placeholder="Enter your email" required />
       <FormField
         label="Contact Number"
-        id="contactNumber"
+        id="phone"
         type="tel"
         placeholder="Enter your contact number"
         required
@@ -278,7 +269,7 @@ const AuthForm = ({ type = 'signin' }: { type: 'signin' | 'signup' }) => {
 
       {type === 'signin' ? renderSigninForm() : renderSignupForm()}
 
-      <p className="text-muted-foreground mt-4 text-center text-sm">
+      <p className="text-muted-foreground mt-10 text-center text-sm">
         {type === 'signin' ? (
           <>
             New here?{' '}

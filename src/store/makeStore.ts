@@ -1,24 +1,26 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { counterApi } from "@/store/features/counter/counterApi";
-import counterReducer from "@/store/features/counter/counterSlice";
-// import { userApi } from "@/features/user";
-// import userReducer from "@/features/user";
+import { configureStore } from '@reduxjs/toolkit';
+import { counterApi } from '@/store/features/counter/counterApi';
+import counterReducer from '@/store/features/counter/counterSlice';
+import authReducer from '@/store/features/auth/authSlice';
+import { authApi } from './features/auth/authApi';
 
 export const makeStore = () =>
   configureStore({
     reducer: {
       counter: counterReducer,
-      //   user: userReducer,
+      auth: authReducer,
       [counterApi.reducerPath]: counterApi.reducer,
-      //   [userApi.reducerPath]: userApi.reducer,
+      [authApi.reducerPath]: authApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: false,
-      }).concat(counterApi.middleware),
-    devTools: process.env.NODE_ENV !== "production",
+      })
+        .concat(counterApi.middleware)
+        .concat(authApi.middleware),
+    devTools: process.env.NODE_ENV !== 'production',
   });
 
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore["getState"]>;
-export type AppDispatch = AppStore["dispatch"];
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];
