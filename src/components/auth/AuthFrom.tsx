@@ -267,9 +267,9 @@ const AuthForm = ({ type = 'signin' }: { type: 'signin' | 'signup' }) => {
   );
 
   return (
-    <div className="mx-auto w-full max-w-xl pb-10">
+    <div className="mx-auto w-full max-w-xl pt-5 pb-10">
       <header className="flex flex-col items-center space-y-2 text-center">
-        <LogoName />
+        <LogoName className="scale-125" />
         <h1 className="font-rubik mt-16 mb-10 text-3xl font-medium">
           {type === 'signin' ? 'Great to have you back!' : 'Great to have you here!'}
         </h1>
